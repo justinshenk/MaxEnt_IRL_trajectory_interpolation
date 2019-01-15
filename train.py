@@ -62,7 +62,7 @@ class Trainer:
             tmp_model.load_image(IMAGE_FILE)
             self.f_empirical += tmp_model.compute_empirical_feature_count()
         self.f_empirical /= self.n_feature
-        print "empirical feature count:", self.f_empirical
+        print("empirical feature count:", self.f_empirical)
 
         # make cache directory
         if not os.path.exists(CACHE_DIR):
@@ -97,7 +97,7 @@ class Trainer:
         f_expected_list = []
 
         for bn in basename:
-            print bn
+            print(bn)
             _start = time.time()
 
             model = MaxEntIRL()
@@ -117,7 +117,7 @@ class Trainer:
 
             _end = time.time()
 
-            print "done. time", _end - _start
+            print("done. time", _end - _start)
 
         # save
         np.save(os.path.join(CACHE_DIR, "%d-%d-ll.npy" % (self.pid, thread_index)), np.array(loglikelihood_tmp))
@@ -132,18 +132,18 @@ class Trainer:
         elif -self.DELTA < improvement < self.DELTA:
             improvement = 0
 
-        print "improved by", improvement
+        print("improved by", improvement)
 
         # update parameters
         if improvement < 0:
-            print "NO IMPROVEMENT: decrease step size and redo"
+            print("NO IMPROVEMENT: decrease step size and redo")
             self.lam = self.lam * 0.5
 
             for f in range(self.n_feature):
                 self.w[f] = self.w_best[f] * math.exp(self.lam * self.f_gradient[f])
 
         elif improvement > 0:
-            print "IMPROVEMENT: increase step size"
+            print("IMPROVEMENT: increase step size")
             self.w_best = self.w.copy()
             self.lam = self.lam * 2.0
 
@@ -153,12 +153,12 @@ class Trainer:
                 self.w[f] = self.w_best[f] * math.exp(self.lam * self.f_gradient[f])
 
         elif improvement == 0:
-            print "CONVERGED"
+            print("CONVERGED")
             self.converged = True
 
-        print "lambda:", self.lam
-        print "f_empirical:", self.f_empirical
-        print "f_expected:", self.f_expected
+        print("lambda:", self.lam)
+        print("f_empirical:", self.f_empirical)
+        print("f_expected:", self.f_expected)
 
     def save_parameter(self, output_filename):
         np.savetxt(output_filename, self.w)
@@ -183,7 +183,7 @@ if __name__ == '__main__':
         iteration += 1
 
         end = time.time()
-        print "time of this iteration:", end - start, "s"
+        print("time of this iteration:", end - start, "s")
 
     trainer.save_parameter(os.path.join(RESULT_DIR, "weight.txt"))
-    print "train: done."
+    print("train: done.")

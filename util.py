@@ -12,7 +12,7 @@ def erase_new_line(s):
 
 def read_text(filename):
     with open(filename, 'r') as f:
-        lines = map(erase_new_line, f.readlines())
+        lines = list(map(erase_new_line, f.readlines()))
     return lines
 
 
